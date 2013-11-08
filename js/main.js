@@ -35,10 +35,10 @@ app
             $scope.value = value;
 
             $scope.ratee = {};
-            $scope.ratee.id = 100;
-            $scope.ratee.value = 6;
+            $scope.ratee.id = 1;
+            $scope.ratee.value = value;
 
-            //Rate.update({}, $scope.ratee);
+            Rate.update({}, $scope.ratee);
 
         };
 
