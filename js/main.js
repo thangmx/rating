@@ -38,7 +38,7 @@ app
             $scope.ratee.id = 100;
             $scope.ratee.value = 6;
 
-            Rate.update({}, $scope.ratee);
+            //Rate.update({}, $scope.ratee);
 
         };
 
