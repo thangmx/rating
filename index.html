@@ -9,15 +9,18 @@
 </head>
 <body>
 <div ng-controller="RatingAppCtrl" class="well well-small">
-    <h4>Default</h4>
-    <rating value="rate" max="max" readonly="isReadonly" on-hover="hoveringOver(value)" on-leave="overStar = null" id="id"></rating>
-    <span class="badge" ng-class="{'badge-warning': percent<30, 'badge-info': percent>=30 && percent<70, 'badge-success': percent>=70}" ng-show="overStar && !isReadonly">{{percent}}%</span>
-
-    <pre style="margin:15px 0;">Rate: <b>{{rate}}</b> - Average: <b>{{avg}}</b> - No. of rates: <b>{{rates.length}}</b>  - Readonly is: <i>{{isReadonly}}</i> - Hovering over: <b>{{overStar || "none"}}</b></pre>
-
-    <button class="btn btn-small btn-danger" ng-click="rate = 0" ng-disabled="isReadonly">Clear</button>
-    <button class="btn btn-small" ng-click="isReadonly = ! isReadonly">Toggle Readonly</button>
-
+    <h4>Default</h4>  
+    
+    <pre style="margin:15px 0;">Average: <b>{{avg | number:2}}</b> - No. of rates: <b>{{count}}</b></pre>
+    <h5 ng-hide"count"> Average <rating id="0" value="avg" max="max"></rating> </h5>
+    
+    <li ng-repeat="rate in rates" style="margin:10px 0;"> 
+	<rating id="rate.id" value="rate.value" max="max" readonly="isReadonly"></rating>	
+	
+	<button class="btn btn-small btn-danger" ng-click="deleteRate(rate.id)">Clear</button>	
+      
+    </li>
+    <button class="btn btn-small btn-primary" ng-click="addRate()" ng-disabled="isReadonly">Add</button>
 </div>
 </body>
 </html>

@@ -6,7 +6,8 @@ var ratingSv = angular.module('ratingServices', ['ngResource']);
 ratingSv.factory('Rate', ['$resource',
     function($resource){
         return $resource('rates/rates.json', {}, {
-            query: {method:'GET', isArray:true},
-            update: {method: 'POST'}
+            query: {method:'GET'},
+            update: {method: 'POST'},
+            delete: {method: 'DELETE'}
         });
     }]);

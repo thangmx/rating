@@ -12,7 +12,8 @@ function main(argv) {
     new HttpServer({
         'GET': createServlet(StaticServlet),
         'HEAD': createServlet(StaticServlet),
-        'POST': createServlet(StaticServlet)
+        'POST': createServlet(StaticServlet),
+	'DELETE': createServlet(StaticServlet)
     }).start(Number(argv[2]) || DEFAULT_PORT);
 }
 
@@ -182,28 +183,34 @@ StaticServlet.prototype.sendFile_ = function(req, res, path) {
 
         file.on('close', function() {
             if (req.method === 'GET') {
-                if (Object.keys(req.url.query).length > 0) {
+                if (Object.keys(req.url.query).length > 0) {		    
                     var obj = JSON.parse(temp);
-                    for (var i = 0; i < obj.length; i++) {
-                        var check = true;
-
-                        for (var search in req.url.query) {
-                            if (parseInt(obj[i][search]) !== parseInt(req.url.query[search])) {
-                                check = false;
-                            }
-                        }
-                        if (check) {
-                            res.write(JSON.stringify(obj[i]));
-                            break;
-                        }
-                    }
+                    for (var key in Object.keys(obj)) {
+			if (obj.hasOwnProperty(key)) {
+			    var o = obj[key];
+			    var check = true;			
+			    for (var search in Object.keys(req.url.query)) {
+				if (req.url.query.hasOwnProperty(search)) {
+				    if (!o.hasOwnProperty(search))
+					check = false;
+				    else if (parseInt(o[search]) !== parseInt(req.url.query[search])) {
+				      check = false;
+				    }
+				}
+			  }
+			  if (check) {
+			      res.write(JSON.stringify(o));
+			      break;
+			  }
+			}
+		    }
                     res.end();
                 } else {
                     res.write(temp);
                     res.end();
                 }
             }
-            else {
+            else if (req.method === 'POST') {
                 var body = '';
                 req.on('data', function (data) {
                     body += data;
@@ -212,16 +219,8 @@ StaticServlet.prototype.sendFile_ = function(req, res, path) {
                     var writeStream = fs.createWriteStream(path);
                     var readData = JSON.parse(temp);
                     var writeData = JSON.parse(body);
-                    var i;
-                    for (i = 0; i < readData.length; i++) {
-                        if (readData[i].id === writeData.id) {
-                            readData[i].value = writeData.value;
-                            break;
-                        }
-                    }
-                    if (i === readData.length) {
-                        readData.push(writeData);
-                    }
+		    
+		    readData[writeData.id] = writeData;
                     writeStream.write(JSON.stringify(readData));
                     writeStream.end();
                     res.write(body);
@@ -229,6 +228,22 @@ StaticServlet.prototype.sendFile_ = function(req, res, path) {
 
                 });
             }
+            else if (req.method === 'DELETE') {
+		var writeStream = fs.createWriteStream(path);
+		var readData = JSON.parse(temp);
+		var i = parseInt(req.url.query.id);		
+
+		while(readData.hasOwnProperty((i+1).toString())) {
+		    readData[i.toString()].value = readData[(i+1).toString()].value;
+		    i++;
+		}
+
+		delete readData[i];
+		writeStream.write(JSON.stringify(readData));
+		writeStream.end();
+
+		res.end();
+	    }
         });
         file.on('error', function(error) {
             self.sendError_(req, res, error);

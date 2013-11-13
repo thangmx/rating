@@ -33,13 +33,13 @@ app
             }
 
             $scope.value = value;
+	    
+	    var ratee = {};
+            ratee.id = $scope.id;
+            ratee.value = value;
 
-            $scope.ratee = {};
-            $scope.ratee.id = 1;
-            $scope.ratee.value = value;
-
-            Rate.update({}, $scope.ratee);
-
+            Rate.update({}, ratee);
+	    Rate.query({}, $scope.$parent.update);
         };
 
         $scope.enter = function(value) {
@@ -70,11 +70,10 @@ app
         return {
             restrict: 'EA',
             scope: {
-                id: '=',
+	        id: '=',
                 value: '=',
                 onHover: '&',
-                onLeave: '&',
-                rates: '&'
+                onLeave: '&'
             },
             controller: 'RatingController',
             templateUrl: 'my-rating.html',
@@ -82,25 +81,38 @@ app
         };
     })
     .controller('RatingAppCtrl', function ($scope, $http, Rate) {
-        $scope.rate = 7;
         $scope.max = 10;
         $scope.isReadonly = false;
-        $scope.id = 1;
         $scope.avg = 0;
-        $scope.rateTot = 0;
-
-         Rate.query({}, function(data) {
-             $scope.rates = data;
-             angular.forEach($scope.rates, function(rate) {
-                 $scope.rateTot = $scope.rateTot + (rate.value);
-             });
-
-             $scope.avg = $scope.rateTot / data.length;
-         });
-
-
-        $scope.hoveringOver = function(value) {
-            $scope.overStar = value;
-            $scope.percent = 100 * (value / $scope.max);
+        $scope.count = 0;
+        
+	$scope.update = function(data) {
+             var sum = 0;	    
+             for (var key in Object.keys(data)) {
+		if (data.hasOwnProperty(key)) {      
+		  sum += data[key].value;
+		  $scope.count++;	       
+		};		
+	     }
+	     $scope.avg = sum / (Object.keys(data).length - 2);
+	     $scope.rates = data;
+	     $scope.count = Object.keys(data).length - 2;
         };
+	
+	Rate.query({}, $scope.update);
+
+	$scope.deleteRate = function(value) {
+	    Rate.delete({id:value});
+	    Rate.query({}, $scope.update);
+	};
+	
+	$scope.addRate = function() {
+	    var ratee = {};          
+	    ratee.id = Object.keys($scope.rates).length - 1;
+	    ratee.value = parseInt($scope.avg);
+	    
+	    Rate.update({}, ratee);
+	    
+	    Rate.query({}, $scope.update);
+	};
 });
