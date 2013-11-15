@@ -225,7 +225,6 @@ StaticServlet.prototype.sendFile_ = function(req, res, path) {
 		    if (!readData.hasOwnProperty(writeData.id)) {		      		    
 			var newId = 0;
 			for (var key in readData) {
-			  console.log(readData[key]);
 			    if (readData.hasOwnProperty(key)) {
 				if (readData[key].id > newId)
 				    newId = readData[key].id;				    
@@ -235,7 +234,6 @@ StaticServlet.prototype.sendFile_ = function(req, res, path) {
 		    }
 		    
 		    readData[writeData.id] = writeData;
-		    console.log(writeData);
                     writeStream.write(JSON.stringify(readData));
                     writeStream.end();
                     res.write(JSON.stringify(writeData));
@@ -244,10 +242,15 @@ StaticServlet.prototype.sendFile_ = function(req, res, path) {
             }
             else if (req.method === 'DELETE') {
 		var writeStream = fs.createWriteStream(path);
+                if (req.url.query.id === "all") {
+                    writeStream.write("{}");
+                }
+                else {
 		var readData = JSON.parse(temp);
-	        res.write(JSON.stringify(readData[req.url.query.id]));
+	    res.write(JSON.stringify(readData[req.url.query.id]));
 		delete readData[req.url.query.id];
 		writeStream.write(JSON.stringify(readData));
+                }
 		writeStream.end();
 		res.end();
 	    }

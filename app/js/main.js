@@ -122,4 +122,10 @@ app
 		Rate.query({}, $scope.update);
 	    });
 	};
+
+    $scope.deleteAllRate = function() {
+        Rate.delete({id:"all"}, function() {
+            Rate.query({}, $scope.update);
+        });
+    };
 });

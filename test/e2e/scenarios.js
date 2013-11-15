@@ -6,9 +6,8 @@ describe('rating', function() {
 
   beforeEach(function() {
     browser().navigateTo('/app/index.html');
-    
-    element('button:contains("Add")').click();
-    element('button:contains("Clear")').click();   
+
+    element('button:contains("Clear All")').click();
     element('button:contains("Add")').click();
     element('button:contains("Add")').click();
     element('button:contains("Add")').click();
@@ -28,7 +27,7 @@ describe('rating', function() {
   
   it('should remove all ratings', function() {
       expect(repeater('.rates li').count()).toBe(3);
-      element('button:contains("Clear")').click();
+      element('button:contains("Clear All")').click();
       expect(repeater('.rates li').count()).toBe(0);
   });
 
