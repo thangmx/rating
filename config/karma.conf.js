@@ -3,6 +3,7 @@ module.exports = function(config){
     basePath : '../',
 
     files : [
+      'test/lib/jquery-1.10.2.js',
       'app/lib/angular/angular.js',
       'app/lib/angular/angular-*.js',
       'test/lib/angular/angular-mocks.js',
