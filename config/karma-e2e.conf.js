@@ -3,7 +3,7 @@ module.exports = function(config){
 
 
     basePath : '../',
-
+    frameworks: ['ng-scenario'],
     files : [
         'test/e2e/**/*.js'
     ],
@@ -12,7 +12,7 @@ module.exports = function(config){
 
     browsers : ['Firefox'],
 
-    frameworks: ['ng-scenario'],
+
 
     singleRun : true,
 

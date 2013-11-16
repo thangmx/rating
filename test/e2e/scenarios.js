@@ -5,8 +5,8 @@
 describe('rating', function() {
 
   beforeEach(function() {
-    browser().navigateTo('/app/index.html');
 
+    browser().navigateTo('/app/index.html');
     element('button:contains("Clear All")').click();
     element('button:contains("Add")').click();
     element('button:contains("Add")').click();

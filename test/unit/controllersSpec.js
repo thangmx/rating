@@ -1,7 +1,8 @@
 'use strict';
 
 /* jasmine specs for controllers go here */
-
+define(['angular', 'angularMocks', 'app'], function(angular, mocks, app){
+'use strict';
 describe('RatingApp controllers', function () {
     beforeEach(function () {
         this.addMatchers({
@@ -356,4 +357,5 @@ describe('RatingApp controllers', function () {
             expect(typeOfId).toBe('number');
         });
     });
+});
 });
