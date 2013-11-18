@@ -1,8 +1,9 @@
 'use strict';
 
 /* jasmine specs for controllers go here */
-define(['angular', 'angularMocks', 'app'], function(angular, mocks, app){
+define(['angular', 'angularMocks', 'app', 'angular-resource'], function(angular, mocks, app, res) {
 'use strict';
+
 describe('RatingApp controllers', function () {
     beforeEach(function () {
         this.addMatchers({
@@ -12,14 +13,12 @@ describe('RatingApp controllers', function () {
         });
     });
 
-    beforeEach(module('ratingApp'));
-    beforeEach(module('ratingServices'));
+    beforeEach(mocks.module('ratingApp'));
 
     describe('RatingAppCtrl', function () {
 
-        var scope, dscope, ctrl, dctrl, $httpBackend, $rootScope, $controller;
-
-        beforeEach(inject(function ($injector) {
+        var scope, ctrl, $httpBackend, $rootScope, $controller;
+        beforeEach(mocks.inject(function ($injector) {
             $httpBackend = $injector.get('$httpBackend');
             $httpBackend.when('GET', 'rates/rates.json').respond({
                 "1": {
@@ -288,7 +287,6 @@ describe('RatingApp controllers', function () {
             }]);
         });
 
-
     });
 
     describe('rating', function () {
@@ -296,7 +294,7 @@ describe('RatingApp controllers', function () {
         var maxRating = 3;
 
 
-        beforeEach(inject(function ($injector) {
+        beforeEach(mocks.inject(function ($injector) {
             scope = $injector.get('$rootScope');
             $compile = $injector.get('$compile');
             elm = angular.element('<rating id="1" value="value" max="' + maxRating + '"> </rating>');
@@ -320,7 +318,7 @@ describe('RatingApp controllers', function () {
         var scope, ctrl, $rootScope, $controller, attrs;
         var foo, bar = null;
 
-        beforeEach(inject(function ($injector) {
+        beforeEach(mocks.inject(function ($injector) {
 
             $rootScope = $injector.get('$rootScope');
             $controller = $injector.get('$controller');
@@ -331,7 +329,7 @@ describe('RatingApp controllers', function () {
                 stateOff: null,
                 stateOn: null
             };
-            ctrl = $controller('RatingController', {
+            ctrl = $controller('RatingCtrl', {
                 $scope: scope,
                 $attrs: attrs
             });
@@ -340,13 +338,6 @@ describe('RatingApp controllers', function () {
             scope.value = 4;
             scope.readonly = false;
         }));
-
-        it('should pass id as number to updateRate function', function () {
-            $rootScope.updateRate = function (id, value) {};
-            spyOn($rootScope, 'updateRate');
-            scope.rate(7);
-            expect($rootScope.updateRate).toHaveBeenCalledWith(3, 7);
-        });
 
         it('should pass id as number to updateRate function', function () {
             var typeOfId;
