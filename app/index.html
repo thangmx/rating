@@ -8,8 +8,8 @@
 <div ng-controller="RatingAppCtrl" class="well well-small">
     <h4>Default</h4>  
     <pre style="margin:15px 0;">Average: <b>{{avg | number:2}}</b> - No. of rates: <b>{{count}}</b></pre>
-    <button class="btn btn-small btn-primary" ng-click="addRate()" ng-disabled="isReadonly">Add</button>
-    <button class="btn btn-small btn-danger" ng-click="deleteAllRate()" >Clear All</button>
+    <button class="btn btn-small btn-primary" ng-click="addRate()">Add</button>
+    <button class="btn btn-small btn-danger" ng-click="deleteAllRate()" id="clearAll">Clear All</button>
     <h5> Average <rating id="0" value="avg" max="max" readonly="true"></rating> </h5>
     <ul class="rates">
     <li ng-repeat="rate in rates | orderBy:'id':number" style="margin:10px 0;list-style: none;">
